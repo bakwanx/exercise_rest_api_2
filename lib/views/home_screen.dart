@@ -1,8 +1,10 @@
+import 'package:exercise_rest_api_2/cubit/product_cubit.dart';
 import 'package:exercise_rest_api_2/models/product_model.dart';
 import 'package:exercise_rest_api_2/providers/product_provider.dart';
 import 'package:exercise_rest_api_2/utils/theme.dart';
 import 'package:exercise_rest_api_2/views/widgets/product_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -13,13 +15,19 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
   @override
   void initState() {
-    ProductProvider productProvider = Provider.of<ProductProvider>(
+    ProductCubit productCubit = BlocProvider.of(
       context,
       listen: false,
     );
-    productProvider.getProduct();
+    productCubit.getProduct();
+    // ProductProvider productProvider = Provider.of<ProductProvider>(
+    //   context,
+    //   listen: false,
+    // );
+    // productProvider.getProduct();
     super.initState();
   }
 
@@ -108,23 +116,23 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Consumer<ProductProvider>(
-        builder: (context, productProvider, child) {
-          if (productProvider.getProductModels().length == 0) {
-            return const Center(
-              child: CircularProgressIndicator(),
+      body: BlocBuilder<ProductCubit, ProductState>(
+        builder: (context, state) {
+          if (state is DataProductLoadedState) {
+            return Container(
+              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 34),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    header(),
+                    body(state.productModel),
+                  ],
+                ),
+              ),
             );
           }
-          return Container(
-            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 34),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  header(),
-                  body(productProvider.getProductModels()),
-                ],
-              ),
-            ),
+          return const Center(
+            child: CircularProgressIndicator(),
           );
         },
       ),

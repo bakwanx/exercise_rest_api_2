@@ -22,6 +22,5 @@ class ProductProvider with ChangeNotifier{
     }catch(e){
       print("Message error : $e");
     }
-    notifyListeners();
   }
 }

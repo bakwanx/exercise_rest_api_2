@@ -1,6 +1,8 @@
+import 'package:exercise_rest_api_2/cubit/product_cubit.dart';
 import 'package:exercise_rest_api_2/providers/product_provider.dart';
 import 'package:exercise_rest_api_2/views/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -12,11 +14,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
+    return MultiBlocProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (context) => ProductProvider(),
-        )
+        BlocProvider(create: (context) => ProductCubit())
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
